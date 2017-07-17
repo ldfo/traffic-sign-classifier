@@ -19,10 +19,11 @@ The goals of this project are the following:
 [org_image]: ./org_image.png "Original image"
 [proc_image]: ./processed_image.png "Processed image"
 [sign_count_plot]: ./sign_count_plot.png "Traffic sign counts plot"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[im1]: ../ts_fromtheweb/sign1.png "Traffic Sign 1"
+[im2]: ../ts_fromtheweb/sign2.png "Traffic Sign 2"
+[im3]: ../ts_fromtheweb/sign3.png "Traffic Sign 3"
+[im4]: ../ts_fromtheweb/sign4.png "Traffic Sign 4"
+[im5]: ../ts_fromtheweb/sign5.png "Traffic Sign 5"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -76,19 +77,25 @@ My final model consisted of the following layers:
 | Input         		| 32x32x1 black and white image   				| 
 | Conv2D  		     	| 1x1 stride, VALID padding, outputs 28x28x28 	|
 | RELU					|												|
-| Max pooling	      	| 1x1 stride,  outputs 14x14x16, padding Same	|
-| Conv2D			    | 1x1 stride,  outputs 10x10x8, padding Valid	|
+| Max pooling	      	| 1x1 stride,  outputs 28x28x28, padding Same	|
+| Conv2D			    | 1x1 stride,  outputs 24x24x16, padding Valid	|
 | RELU 					| 												|
-| Max pooling			| 2x2 stride,  outputs 5x5x8	padding Same	|
-| Flatten				| output size = 200								|
-| Fully connected		| size = 128,  RELU								|
-| Fully connected		| size = 32,   RELU								|
+| Max pooling			| 1x1 stride,  outputs 24x24x16, padding Same	|
+| Conv2D			    | 2x2 stride,  outputs 10x10x10, padding Valid	|
+| RELU 					| 												|
+| Max pooling			| 1x1 stride,  outputs 10x10x10, padding Same	|
+| Flatten				| size = 1000									|
+| Fully connected		| size = 256,  RELU								|
+| dropout				| keep probability = 0.75						|
+| Fully connected		| size = 128,   RELU							|
+| dropout				| keep probability = 0.75						|
+| Fully connected		| size = 64,   RELU								|
+| dropout				| keep probability = 0.75						|
 | Fully connected (out)	| size = number of classes,   linear			|
  
-
 #### 3. Model training
 
-To train the model, I used a batch size of 128, 16 epochs, a learning rate of 0.00025 with an AdamOptimizer.
+To train the model, I used a batch size of 256, 15 epochs, a learning rate of 0.00025 with an AdamOptimizer.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93.
 My final model results were:
@@ -102,33 +109,42 @@ If an iterative approach was chosen:
 * After adding two other convolutions and max pooling layers I also added some dropout layers to help with overfitting.
 * Lastly I tuned the learning rate which I found was too high at first because the accuracy was oscilating a lot.
 
-###Test a Model on New Images
+### Test a Model on New Images
 
-####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are six German traffic signs that I found on the web:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text][im1] ![alt text][im2] ![alt text][im3] 
+![alt text][im5] ![alt text][im4]
 
-The first image might be difficult to classify because ...
+The first image is a challenge because it is at an angle.
 
-####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
+The second image is a little bit at an angle.
+
+The third image may be a challenge because of the uneven lighting and slight slanting.
+
+The fourth image has a number three which can be confused with an 8
+
+Image 5 shouldn't be a problem.
+
+
+#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
 Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Ahead only      		| Ahead only   									| 
+| Turn right ahead		| Turn right Ahead								|
+| No entry				| Dangerus curve to the right					|
+| General caution		| General caution      							|
+| Speed limit 30 km/h  	| Speed limit 30 km/h 							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. 
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
 
