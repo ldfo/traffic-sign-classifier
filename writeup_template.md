@@ -1,6 +1,6 @@
 # **Traffic Sign Recognition** 
 
-## Writeup
+## Write-up
 ---
 
 **Build a Traffic Sign Recognition Project**
@@ -19,17 +19,17 @@ The goals of this project are the following:
 [org_image]: ./org_image.png "Original image"
 [proc_image]: ./processed_image.png "Processed image"
 [sign_count_plot]: ./sign_count_plot.png "Traffic sign counts plot"
-[im1]: ../ts_fromtheweb/sign1.png "Traffic Sign 1"
-[im2]: ../ts_fromtheweb/sign2.png "Traffic Sign 2"
-[im3]: ../ts_fromtheweb/sign3.png "Traffic Sign 3"
-[im4]: ../ts_fromtheweb/sign4.png "Traffic Sign 4"
-[im5]: ../ts_fromtheweb/sign5.png "Traffic Sign 5"
+[im1]: ./ts_fromtheweb/sign1.png "Traffic Sign 1"
+[im2]: ./ts_fromtheweb/sign2.png "Traffic Sign 2"
+[im3]: ./ts_fromtheweb/sign3.png "Traffic Sign 3"
+[im4]: ./ts_fromtheweb/sign4.png "Traffic Sign 4"
+[im5]: ./ts_fromtheweb/sign5.png "Traffic Sign 5"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
 
 ---
-### Writeup
+### Write-up
 Here is a link to my [project code](https://github.com/ldfo/traffic-sign-classifier)
 
 ### Data Set Summary & Exploration
@@ -41,7 +41,7 @@ I used the pandas library to calculate summary statistics of the traffic signs d
 * The size of training set is: 34799
 * The size of the validation set is: 4410
 * The size of test set is: 12630
-* The shape of a traffic sign image is: 32x32
+* The shape of a traffic sign image is: 32x32x3
 * The number of unique classes/labels in the data set is: 43
 
 #### 2. Include an exploratory visualization of the dataset
@@ -56,11 +56,13 @@ On the graph we can see some signs like 'Go straight or left' and 'Speed limit 2
 
 #### 1. Image processing.
 
-First I converted the images to grayscale for reducing the dimensionality. We want to train only on one color channel because it's enough.
+First I converted the images to grayscale for reducing the dimensionality. I assume grayscale images work better because the excess information of the extra channels only adds confusion into the learning process. 
 
-Then I used the cv2.equalizeHist function for making the histograms of the image more centered, it doesn't work well in places where we have very bright and very dark pixels but in general it does a good job making the images more homogeneous.
+Then I used the cv2.equalizeHist function for making the histograms of the image more centered, it doesn't work well in places where we have very bright and very dark pixels but in general, it does a good job making the images more homogeneous.
 
 Lastly I normalized the images for giving a more consistent dynamic range on the images.
+
+If we didn't scale our input training vectors, the ranges of our distributions of feature values would likely be different for each feature, and thus the learning rate would cause corrections in each dimension that would differ (proportionally speaking) from one another. We might be over compensating a correction in one weight dimension while undercompensating in another.
 
 Example of an image before and after processing:
 
@@ -104,10 +106,10 @@ My final model results were:
 * test set accuracy of 93%
 
 If an iterative approach was chosen:
-* At first i chose an architecture consisting on a conv2d layer then a max_pool layer and then some fully connected layers because I tought it was a good starting point.
+* At first I chose an architecture consisting of a conv2d layer then a max_pool layer and then some fully connected layers because I thought it was a good starting point.
 * I quickly achieved 85% accuracy with that architecture but it seemed that I needed more convolution and max pooling layers.
 * After adding two other convolutions and max pooling layers I also added some dropout layers to help with overfitting.
-* Lastly I tuned the learning rate which I found was too high at first because the accuracy was oscilating a lot.
+* Lastly I tuned the learning rate which I found was too high at first because the accuracy was oscillating a lot.
 
 ### Test a Model on New Images
 
@@ -143,10 +145,11 @@ Here are the results of the prediction:
 
 
 The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. 
+The performance on the new images is similar to the performance on the training set, but it fails on the image that is heavily at an angle, data augmentation of the training set may help with this kind of errors.
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-For the first image (ahead only) the nerwork is correct but no vehicles follows not that far away.
+For the first image (ahead only) the network is correct but no vehicles follow not that far away.
 
 
 | probability 	        |     Prediction	        					| 
@@ -155,7 +158,7 @@ For the first image (ahead only) the nerwork is correct but no vehicles follows 
 | .0004					| No passing for vehicles over 3.5 metric...	|
 | .0004	      			| Speed limit 60km/h			 				|
 
-For the second image it is also 100% sure its a Turn right ahead
+For the second image, it is also 100% sure it's a Turn right ahead
 
 For the third image it got it wrong, the probabilities are:
 
