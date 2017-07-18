@@ -61,8 +61,7 @@ First I converted the images to grayscale for reducing the dimensionality. I ass
 Then I used the cv2.equalizeHist function for making the histograms of the image more centered, it doesn't work well in places where we have very bright and very dark pixels but in general, it does a good job making the images more homogeneous.
 
 Lastly I normalized the images for giving a more consistent dynamic range on the images.
-
-If we didn't scale our input training vectors, the ranges of our distributions of feature values would likely be different for each feature, and thus the learning rate would cause corrections in each dimension that would differ (proportionally speaking) from one another. We might be over compensating a correction in one weight dimension while undercompensating in another.
+This affects the model because if the ranges of the values for each image changes a lot the learning rate would cause corrections that would differ (proportionally speaking) from one another. We might be over compensating a correction in one weight while undercompensating in another and cause our solution to oscillate.
 
 Example of an image before and after processing:
 
